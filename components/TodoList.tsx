@@ -16,7 +16,7 @@ const TodoList = () => {
   };
 
   const handleKeyUp = (key: KeyboardEvent<HTMLInputElement>) => {
-    if (key?.code === "Enter" && newTodo) {
+    if (key?.keyCode === 13 && newTodo) {
       const randomNumber = getRandowNumber();
       const newItem: Todo = {
         id: `item-${randomNumber}`,
