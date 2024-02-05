@@ -6,14 +6,11 @@ import { format } from "date-fns";
 import TodoItem from "./TodoItem";
 import { Todo } from "@/interface/todo";
 import { MainContext } from "@/context/MainContext";
+import { getRandowNumber } from "@/utils/function";
 
 const TodoList = () => {
   const { todo, newTodo, addTodo, removeTodo, updateTodo, renderNewTodo } =
     useContext(MainContext);
-
-  const getRandowNumber = () => {
-    return Math.floor(Math.random() * 9999);
-  };
 
   const handleKeyUp = (key: KeyboardEvent<HTMLInputElement>) => {
     if (key?.keyCode === 13 && newTodo) {
@@ -22,25 +19,11 @@ const TodoList = () => {
         id: `item-${randomNumber}`,
         content: newTodo,
         checked: false,
+        isEdit: false,
       };
 
-      addTodo(newItem)
+      addTodo(newItem);
     }
-  };
-
-  const handleCheck = (id: number, checked: boolean) => {
-    if (id > -1) {
-      let update = [...todo];
-      update[id] = {
-        ...update[id],
-        checked,
-      };
-      updateTodo(update)
-    }
-  };
-
-  const handleDelete = (id: number) => {
-    removeTodo(id)
   };
 
   return (
@@ -62,22 +45,22 @@ const TodoList = () => {
             key={item.id}
             index={index}
             data={item}
-            handleCheck={handleCheck}
-            handleDelete={handleDelete}
           />
         ))}
 
-        <button className="flex items-center w-full h-8 px-2 mt-2 text-sm font-medium rounded">
-          <LuListPlus className="w-5 h-5 text-gray-400 fill-current" />
-          <input
-            className="flex-grow h-8 ml-4 bg-transparent focus:outline-none font-medium"
-            type="text"
-            placeholder="add a new task"
-            value={newTodo}
-            onChange={(e) => renderNewTodo(e.target.value)}
-            onKeyUp={(e) => handleKeyUp(e)}
-          />
-        </button>
+        {[...todo].filter((item) => item?.isEdit)?.length === 0 && (
+          <button className="flex items-center w-full h-8 px-2 mt-2 text-sm font-medium rounded">
+            <LuListPlus className="w-5 h-5 text-gray-400 fill-current" />
+            <input
+              className="flex-grow h-8 ml-4 bg-transparent focus:outline-none font-medium"
+              type="text"
+              placeholder="add a new task"
+              value={newTodo}
+              onChange={(e) => renderNewTodo(e.target.value)}
+              onKeyUp={(e) => handleKeyUp(e)}
+            />
+          </button>
+        )}
       </div>
     </div>
   );
